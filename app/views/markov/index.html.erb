@@ -1,0 +1,56 @@
+<form action="" class="bootstrap-frm">
+    <h1>Meeting Name Request Form 
+    </h1>
+
+    <label>
+        <span>How many words?</span>
+        <input type="text" id="len" value="5">
+    </label>
+    
+    <label>
+        <span>Enter a Business Phrase (productivity, business, finance):</span>
+       <input type="text" id="term" value="List of Buzzwords">
+    </label>
+    
+     <!--<label>
+        <span>Subject :</span><select name="selection">
+        <option value="Job Inquiry">Job Inquiry</option>
+        <option value="General Question">General Question</option>
+        </select>
+    </label> -->
+
+     <label>
+        <span>&nbsp;</span> 
+        <input type="button" class="button" onclick="generate()" value="Send" /> 
+    </label>    
+</form>
+
+<div>
+<h1 id='title'></h1>
+<h2 id='business-words'></h2>
+</div>
+  <script>
+  	function generate(){
+		term = $("#term").val();
+		len= $("#len").val();
+
+
+		$.ajax({
+			type:"GET",
+			url:"/markov/generate?len="+len+"&term="+term,
+			
+			success:function(result){
+    			$("#business-words").html(result);
+    			$("#title").html("Your Meeting Name:");
+
+ 		 	},
+ 		 	error:function(xhr,status,error){
+ 		 		alert(error)
+ 		 	}
+
+
+ 		});
+
+	}
+  </script>
+
