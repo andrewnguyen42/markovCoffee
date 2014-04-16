@@ -12,7 +12,7 @@ class MarkovController < ApplicationController
   def generate
 
   	term= params[:term].nil?||params[:term].empty? ? 'Productivity' : params[:term]
-  	len= params[:len].nil?||params[:len].empty? ? 5 : params[:len]
+  	len= params[:len].nil?||params[:len].empty? ? 10 : params[:len]
 
   	begin
     	html = open("http://en.wikipedia.org/wiki/"+URI.escape(term.downcase))
