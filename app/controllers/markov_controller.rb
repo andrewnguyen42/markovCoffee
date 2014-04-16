@@ -21,11 +21,14 @@ class MarkovController < ApplicationController
     end
 
     doc = Nokogiri.HTML(html)
+
+    #strip out wikipedia crap
     doc.css('script').remove
     doc.css('head').remove
     doc.css('table').remove
     doc.css('style').remove
     doc.css('br').remove
+    doc.css('h2').remove
     doc.css('p').remove
     doc.css('sup').remove
     doc.css('span').remove
@@ -36,18 +39,16 @@ class MarkovController < ApplicationController
     doc.css('#siteSub').remove
     doc.css('#mw-navigation').remove
     doc.css('#catlinks').remove
+    doc.css('#External_links').remove
     doc.css('.reflist').remove
     doc.css('.printfooter').remove
     doc.css('.dablink').remove
     doc.css('.rellink').remove
-
-    
-
     doc.xpath("//@*[starts-with(name(),'on')]").remove
     final_text=ActionView::Base.full_sanitizer.sanitize(doc.to_s).gsub(/<!.*?$/,'')
-    .gsub(/\n/,' ').gsub(/\t/,' ').gsub('(','').gsub(')','')
+    .gsub(/\n/,' ').gsub(/\t/,' ').gsub('(','').gsub(')','').gsub('–',' ').gsub('.',' ')
+    .gsub(' "',' ').gsub('" ',' ')
  
-
     m=MarkovChainWord.new(final_text,3)
     m.generate(len)
 
