@@ -37,8 +37,15 @@ class MarkovController < ApplicationController
    
     m=MarkovChainWord.new(conferences,2)
     m.generate(len)
+    final_text=m.to_string.humanize.strip!
 
-    render :text => m.to_string.humanize, :content_type => 'text/plain'
+    bad_endings=["on","or","of","and","in","the"]
+
+    if bad_endings.include? final_text.split.last
+        final_text=final_text[0...final_text.rindex(' ')]
+    end
+
+    render :text => final_text, :content_type => 'text/plain'
 
     #render :text => conferences , :content_type => 'text/plain'
   end
