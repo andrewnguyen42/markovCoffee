@@ -8,17 +8,19 @@
     </label>
     
     <label>
-        <span>Grab a business phrase from Wikipedia</span>
-       <input type="text" id="term" value="List of Buzzwords">
+            <span>What Type of Meeting?</span>
+      <input type="radio" name="buzzword-type" value="Computing">Technical
+      <input type="radio" name="buzzword-type" value="Banking and finance">Banking and Finance
+      <input type="radio" name="buzzword-type" value="Business">Business
+     </br>
+      <input type="radio" name="buzzword-type" value="Marketing">Marketing
+      <input type="radio" name="buzzword-type" value="E-commerce">E-commerce
+      <input type="radio" name="buzzword-type" value="Management">Management
+      </br>
+       <input type="radio" name="buzzword-type" value="Business Ethics">Business Ethics
+
     </label>
     
-     <!--<label>
-        <span>Subject :</span><select name="selection">
-        <option value="Job Inquiry">Job Inquiry</option>
-        <option value="General Question">General Question</option>
-        </select>
-    </label> -->
-
      <label>
         <span>&nbsp;</span> 
         <input type="button" class="button" onclick="generate()" value="Send" /> 
@@ -34,14 +36,19 @@
 <p> Your meeting name is brought to you via <a href="http://www.cs.bell-labs.com/cm/cs/pearls/sec153.html"> Markov Chains.</a> Find the source on <a href="https://github.com/andrewnguyen42/markovCoffee">Github.</a></p>
 </div>
   <script>
+
+    var term="Business"
+    $("input:radio[name=buzzword-type]").click(function() {
+       term=$(this).val()
+    });
+
   	function generate(){
-		term = $("#term").val();
 		len= $("#len").val();
 
 
 		$.ajax({
 			type:"GET",
-			url:"/markov/generate?len="+len+"&term="+term,
+			url:"/markov/conf?len="+len+"&term="+term,
 			
 			success:function(result){
     			$("#business-words").html(result);

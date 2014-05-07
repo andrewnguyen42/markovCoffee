@@ -6,6 +6,7 @@ MarkovCoffee::Application.routes.draw do
   root 'markov#index'
 
   get 'markov/generate' => 'markov#generate'
+  get 'markov/conf' => 'markov#conf'
 
 
   # Example of regular route:

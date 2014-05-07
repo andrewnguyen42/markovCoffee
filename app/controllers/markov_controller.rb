@@ -9,6 +9,42 @@ class MarkovController < ApplicationController
 
   end
 
+  def conf
+
+    term= params[:term].nil?||params[:term].empty? ? 'Business' : params[:term]
+    len= params[:len].nil?||params[:len].empty? ? 10 : params[:len]
+
+    begin
+        html = open("http://www.conferencealerts.com/topic-listing.php?page=1&ipp=All&topic="+URI.escape(term))
+    rescue OpenURI::HTTPError => ex
+        html = open("http://www.conferencealerts.com/topic-listing.php?page=1&ipp=All&topic=Business")
+    end
+
+    doc = Nokogiri.HTML(html)
+    doc.css('#loginDivContainer').remove
+    doc.css('#searchBoxTable').remove
+    doc.css('#homeLink').remove
+    doc.css('.paginate').remove
+    doc.css('.current').remove
+
+
+    conferences=''
+    doc.search('a').map do |n|
+      conferences+= n.text+' '
+    end    
+    conferences=conferences.gsub(/\(.*?\)/, "")
+    .gsub('/',' ').gsub('-',' ').gsub('.',' ').gsub(':',' ').gsub('2014','').gsub('2015','')
+   
+    m=MarkovChainWord.new(conferences,2)
+    m.generate(len)
+
+    render :text => m.to_string.humanize, :content_type => 'text/plain'
+
+    #render :text => conferences , :content_type => 'text/plain'
+  end
+
+
+
   def generate
 
   	term= params[:term].nil?||params[:term].empty? ? 'Productivity' : params[:term]
@@ -49,6 +85,8 @@ class MarkovController < ApplicationController
     .gsub(/\n/,' ').gsub(/\t/,' ').gsub('(','').gsub(')','').gsub('–',' ').gsub('.',' ')
     .gsub(' "',' ').gsub('" ',' ')
  
+    real_text="2014 1st International Conference on Business Management, Economics, Tourism and Technology Management"
+
     m=MarkovChainWord.new(final_text,3)
     m.generate(len)
 
