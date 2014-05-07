@@ -33,16 +33,21 @@ class MarkovController < ApplicationController
       conferences+= n.text+' '
     end    
     conferences=conferences.gsub(/\(.*?\)/, "")
-    .gsub('/',' ').gsub('-',' ').gsub('.',' ').gsub(':',' ').gsub('2014','').gsub('2015','')
+    .gsub('/',' ').gsub('.',' ').gsub(':',' ').gsub('2014','').gsub('2015','')
    
     m=MarkovChainWord.new(conferences,2)
     m.generate(len)
     final_text=m.to_string.humanize.strip!
 
     bad_endings=["on","or","of","and","in","the","&","and"]
+    bad_starts=["or","of","and","in","&","and"]
 
-    if bad_endings.include? final_text.split.last
+    if bad_endings.include? final_text.split.last.downcase
         final_text=final_text[0...final_text.rindex(' ')]
+    end
+
+    if bad_starts.include? final_text.split.first.downcase
+        final_text=final_text.split(' ')[1..-1].join(' ')
     end
 
     render :text => final_text, :content_type => 'text/plain'
