@@ -39,7 +39,7 @@ class MarkovController < ApplicationController
     m.generate(len)
     final_text=m.to_string.humanize.strip!
 
-    bad_endings=["on","or","of","and","in","the"]
+    bad_endings=["on","or","of","and","in","the","&","and"]
 
     if bad_endings.include? final_text.split.last
         final_text=final_text[0...final_text.rindex(' ')]
